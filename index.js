@@ -48,7 +48,7 @@ function proxy(opts, req, res) {
 				if ((options.headers['content-type'] || '').indexOf('multipart/form-data') !== -1) {
 					isMuiltipart = true;
 				} else {
-					options.headers['content-length'] = content.length;
+					options.headers['content-length'] = Buffer.byteLength(content);
 				}
 			}
 
@@ -97,7 +97,7 @@ function proxy(opts, req, res) {
 			});
 
 			req.on('error', function(error) {
-				callback(error, null, req);
+				callback(error, null, req, {statusCode: 500, message: 'Internal Server Error', error: error});
 			});
 
 			if (isMuiltipart) { //Upload file
@@ -105,6 +105,8 @@ function proxy(opts, req, res) {
 			} else {
 				req.end(content);
 			}
+
+			return req;
 		}
 	};
 }
