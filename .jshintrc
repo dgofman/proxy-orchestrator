@@ -29,7 +29,7 @@
 
     // Custom predefined globals.
     "predef": [
-        "__appDir", "define", "alert", "window", "document", 
+        "__appDir", "define", "alert", "window", "document",  "unescape",
         "beforeEach", "afterEach", "describe", "before", "after", "it"
     ],
 

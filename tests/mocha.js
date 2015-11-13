@@ -148,7 +148,7 @@ describe('Testing Proxy', function () {
 		proxy({
 			host: 'localhost',
 			port: 12345
-		}).request(function(err, result, req, res) {
+		}).request(function(err) {
 			assert.ok(err !== null);
 			assert.equal(err.code, 'ECONNREFUSED');
 			done();

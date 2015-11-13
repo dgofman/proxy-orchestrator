@@ -1,6 +1,6 @@
 {
   "name": "proxy-orchestrator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Simple proxy library",
   "main": "index.js",
   "scripts": {
