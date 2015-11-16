@@ -10,7 +10,7 @@ function proxy(opts, req, res) {
 	return /** @lends proxy.prototype */ {
 		res: res,
 		req: req,
-		headers: {
+		headers: (req && (req.headers || req._headers)) || {
 			'Accept-Encoding': 'gzip, deflate',
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'application/json;charset=UTF-8'
@@ -32,7 +32,7 @@ function proxy(opts, req, res) {
 				options = {
 					host: opts.host,
 					port: opts.port,
-					headers: (this.req && (this.req.headers || this.req._headers)) || this.headers,
+					headers: this.headers,
 					method: method,
 					path: path
 				};
