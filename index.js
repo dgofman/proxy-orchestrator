@@ -15,6 +15,7 @@ function proxy(opts, req, res) {
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'application/json;charset=UTF-8'
 		},
+		timeout: opts.timeout !== undefined ? opts.timeout : 20000, //default timwe out 20 seconds, zero - no timeout
 
 		request: function(callback, method, path, data, query) {
 
@@ -25,6 +26,8 @@ function proxy(opts, req, res) {
 			if (method === 'GET' && data && Object.keys(data).length) {
 				path += (path.indexOf('?') === -1 ? '?' : '&') + querystring.stringify(data);
 			}
+
+			delete this.headers.host;
 
 			var server, content, req,
 				isMuiltipart = false,
@@ -99,6 +102,16 @@ function proxy(opts, req, res) {
 			req.on('error', function(error) {
 				callback(error, null, req, {statusCode: 500, message: 'Internal Server Error', error: error});
 			});
+
+			if (self.timeout) {
+				req.on('socket', function (socket) {
+					socket.setTimeout(self.timeout);  
+					socket.on('timeout', function() {
+						debug('TIMEOUT');
+						req.abort();
+					});
+				});
+			}
 
 			if (isMuiltipart) { //Upload file
 				this.req.pipe(req);

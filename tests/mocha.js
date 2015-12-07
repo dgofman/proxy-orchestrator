@@ -117,14 +117,17 @@ describe('Testing Proxy', function () {
 	it('Should test by pass the header of the parent request', function(done) {
 		proxy({
 			host: 'api.linkedin.com',
-			port: 80
+			port: 80,
+			timeout: 0
 		}).request(function(err, result, req1) {
 			proxy({
 				host: 'localhost',
 				port: portHttps
 			}, req1).request(function(err, result, req2, res2) {
 				assert.ok(err === null);
-				assert.equal(req1._headers.host, res2.headers.host);
+				for (var name in req1._headers) {
+					assert.equal(req1._headers[name], res2.headers[name], name);
+				}
 				done();
 			}, 'POST', '/test?format=json');
 		}, 'GET', '/v1?format=json');
@@ -144,13 +147,14 @@ describe('Testing Proxy', function () {
 		});
 	});
 
-	it('Should test request error', function(done) {
+	it('Should test request ECONNRESET error (timeout)', function(done) {
 		proxy({
 			host: 'localhost',
-			port: 12345
+			port: 12345,
+			timeout: 5
 		}).request(function(err) {
 			assert.ok(err !== null);
-			assert.equal(err.code, 'ECONNREFUSED');
+			assert.equal(err.code, 'ECONNRESET');
 			done();
 		}, 'POST', '/test');
 	});
