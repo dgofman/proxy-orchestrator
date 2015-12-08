@@ -154,7 +154,7 @@ describe('Testing Proxy', function () {
 			timeout: 5
 		}).request(function(err) {
 			assert.ok(err !== null);
-			assert.equal(err.code, 'ECONNRESET');
+			assert.ok(err.code === 'ECONNRESET' || err.code === 'ECONNREFUSED');
 			done();
 		}, 'POST', '/test');
 	});
