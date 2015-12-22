@@ -48,11 +48,14 @@ function proxy(opts, req, res) {
 
 			if (method !== 'GET') {
 				content = typeof(data) === 'string' ? data : JSON.stringify(data) || '';
-				if ((options.headers['content-type'] || '').indexOf('multipart/form-data') !== -1) {
-					isMuiltipart = true;
-				} else {
-					options.headers['content-length'] = Buffer.byteLength(content);
-				}
+			}
+
+			if ((options.headers['content-type'] || '').indexOf('multipart/form-data') !== -1) {
+				isMuiltipart = true;
+			} else if (content) {
+				options.headers['content-length'] = Buffer.byteLength(content);
+			} else {
+				delete options.headers['content-length'];
 			}
 
 			options.scheme = (server === https  ? 'HTTPS' : 'HTTP');
