@@ -15,7 +15,7 @@ function proxy(opts, req, res) {
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'application/json;charset=UTF-8'
 		},
-		timeout: opts.timeout !== undefined ? opts.timeout : process.env.TIMEOUT || 20000, //default timwe out 20 seconds, zero - no timeout
+		timeout: Number(opts.timeout !== undefined ? opts.timeout : process.env.TIMEOUT || 20000), //default timwe out 20 seconds, zero - no timeout
 
 		request: function(callback, method, path, data, query) {
 
