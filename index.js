@@ -5,7 +5,7 @@ var debug = require('debug')('proxy-orchestrator'),
 	http = require('http'),
 	https = require('https');
 
-function proxy(opts, req, res) {
+function proxy(opts, req, res, responseIntercept) {
 
 	return /** @lends proxy.prototype */ {
 		res: res,
@@ -15,7 +15,7 @@ function proxy(opts, req, res) {
 			'Cache-Control': 'no-cache',
 			'Content-Type': 'application/json;charset=UTF-8'
 		},
-		timeout: Number(opts.timeout !== undefined ? opts.timeout : process.env.TIMEOUT || 20000), //default timwe out 20 seconds, zero - no timeout
+		timeout: opts.timeout !== undefined ? opts.timeout : process.env.TIMEOUT || 20000, //default timwe out 20 seconds, zero - no timeout
 
 		request: function(callback, method, path, data, query) {
 
@@ -64,6 +64,10 @@ function proxy(opts, req, res) {
 			debug('options -> %s', JSON.stringify(options, null, 2));
 
 			req = server.request(options, function(res) {
+				if (responseIntercept) {
+					responseIntercept(req, res);
+				}
+
 				var data, responseString = '',
 					isPipe = self.res && self.res._headerSent === false;
 

@@ -38,6 +38,23 @@ describe('Testing Proxy', function () {
 		done();
 	});
 
+	it('Should update header by responseIntercept', function(done) {
+		var newContentType =  'application/xml';
+		proxy({
+			host: 'localhost',
+			port: portHttp,
+			secure: false
+		}, null, null, function(req, res) {
+			assert.equal(res.headers['content-type'], 'application/json');
+			res.headers['content-type'] = newContentType;
+		}).request(function(err, result, req, res) {
+			assert.ok(err === null);
+			assert.equal(res.statusCode, 200);
+			assert.equal(res.headers['content-type'], newContentType);
+			done();
+		}, 'GET', '/test', null, {format: 'json'});
+	});
+
 	it('Should test JSON response by query param (HTTP)', function(done) {
 		proxy({
 			host: 'localhost',
