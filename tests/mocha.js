@@ -175,6 +175,21 @@ describe('Testing Proxy', function () {
 			done();
 		}, 'POST', '/test');
 	});
+
+	it('Should test redirect', function(done) {
+		proxy({
+			host: 'localhost',
+			port: portHttp,
+			secure: false
+		}).request(function(err, data, req, res) {
+			assert.ok(err !== null);
+			assert.equal(res.statusCode, 301);
+			assert.equal(err.status, 301);
+			assert.equal(err.headers.location, 'http://indigojs.com');
+			assert.equal(data, '');
+			done();
+		}, 'POST', '/redirect');
+	});
 });
 
 function routeHanlder() {
@@ -236,6 +251,9 @@ function routeHanlder() {
 		} else if (path === '/upload') {
 			res.writeHead(201, {'Content-Type': 'application/text'});  //Uploaded
 			res.end('UPLOADED');
+		} else if (path === '/redirect') {
+			res.writeHead(301, {location: 'http://indigojs.com' });  //Redirect
+			res.end();
 		}
 	};
 }

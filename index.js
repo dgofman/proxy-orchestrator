@@ -99,6 +99,8 @@ function proxy(opts, req, res, responseIntercept) {
 
 						if (res.statusCode >= 200 && res.statusCode <= 226) {
 							callback(null, data, req, res);
+						} else if (res.statusCode >= 300 && res.statusCode <= 307) {
+							callback({status: res.statusCode, headers: res.headers}, data, req, res);
 						} else {
 							callback(data, null, req, res);
 						}
