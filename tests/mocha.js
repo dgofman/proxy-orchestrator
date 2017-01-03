@@ -238,6 +238,7 @@ function routeHanlder() {
 			}
 			res.end();
 		} else if (path === '/proxy') {
+			process.env.DEBUG = 'proxy-orchestrator';
 			proxy({
 				host: 'localhost',
 				port: portHttps

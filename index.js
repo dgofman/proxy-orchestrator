@@ -1,9 +1,15 @@
 'use strict';
 
-var debug = require('debug')('proxy-orchestrator'),
-	querystring = require('querystring'),
+var querystring = require('querystring'),
 	http = require('http'),
 	https = require('https');
+
+function debug() {
+	if ((process.env.DEBUG || '').indexOf('proxy-orchestrator') !== -1) {
+		arguments[0] = new Date().toLocaleTimeString() + '  \u001b[31;1mproxy-orchestrator ' + '\u001b[0m' + arguments[0];
+		console.log.apply(null, arguments);
+	}
+}
 
 function proxy(opts, req, res, responseIntercept) {
 
@@ -60,8 +66,7 @@ function proxy(opts, req, res, responseIntercept) {
 
 			options.scheme = (server === https  ? 'HTTPS' : 'HTTP');
 
-			debug('isMuiltipart -> %s', isMuiltipart);	
-			debug('options -> %s', JSON.stringify(options, null, 2));
+			debug('isMuiltipart: %s, options: %s', isMuiltipart, JSON.stringify(options, null, 2));
 
 			req = server.request(options, function(res) {
 				if (responseIntercept) {
