@@ -1,11 +1,11 @@
 {
   "name": "proxy-orchestrator",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Simple proxy library",
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "lint": "jshint . --config .jshintrc",
+    "jshint": "jshint . --config .jshintrc",
     "test": "mocha tests/mocha.js --reporter spec --check-leaks",
     "cover": "istanbul cover ./node_modules/mocha/bin/_mocha tests/mocha.js -- --reporter spec",
     "check": "istanbul check-coverage --statement 100 --branch 100 --function 100 --lines 100",

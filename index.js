@@ -113,8 +113,14 @@ function proxy(opts, req, res, responseIntercept) {
 				});
 			});
 
-			req.on('error', function(error) {
-				callback(error, null, req, {statusCode: 500, message: 'Internal Server Error', error: error});
+			req.on('error', function(err) {
+				delete options.headers;
+				var error = { statusCode: 500, mesage: err.message, 
+					url: options.scheme.toLowerCase() + '//' + options.host + ':' + options.port + options.path, error: err };
+				error.toString = function() {
+					return JSON.stringify(error, null, 2);
+				};
+				callback(error, null, req, res);
 			});
 
 			if (self.timeout) {
@@ -122,7 +128,7 @@ function proxy(opts, req, res, responseIntercept) {
 					socket.setTimeout(self.timeout);  
 					socket.on('timeout', function() {
 						debug('TIMEOUT');
-						req.abort();
+						req.abort(); //trigger req.on('error'
 					});
 				});
 			}
