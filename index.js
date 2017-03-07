@@ -120,6 +120,9 @@ function proxy(opts, req, res, responseIntercept) {
 				error.toString = function() {
 					return JSON.stringify(error, null, 2);
 				};
+				var res = new http.IncomingMessage(req.socket);
+				res.statusCode = 500;
+				res.statusMessage =  'ERROR';
 				callback(error, null, req, res);
 			});
 
